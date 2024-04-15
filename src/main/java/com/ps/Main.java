@@ -12,6 +12,7 @@ public class Main {
         byte userAnswer = scanner.nextByte();
 
         if(userAnswer == 1){
+
             System.out.println("Enter your principal amount:");
             double principal = scanner.nextDouble();
 
@@ -44,16 +45,20 @@ public class Main {
 
             System.out.printf("Future Value: $%.2f%n", futureValueAnswer);
             System.out.printf("Total interest earned: %.2f%n", (futureValueAnswer - deposit));
+
         } else{
-            System.out.println("Enter your monthly payout: ");
+
+            System.out.print("Enter the monthly payout: ");
             double monthlyPayout = scanner.nextDouble();
 
-            System.out.println("Enter your expected interest rate:");
-            double expectedInterestRate = scanner.nextDouble();
+            System.out.print("Enter the expected interest rate (as a percentage): ");
+            double interestRate = scanner.nextDouble() / 100;
 
-            System.out.println("Enter your years:");
-            double presentValueYears = scanner.nextDouble();
+            System.out.print("Enter the number of years: ");
+            int years = scanner.nextInt();
 
+            double presentValue = calculatePresentValue(monthlyPayout, interestRate, years);
+            System.out.printf("You must invest $%.2f%n", presentValue);
 
         }
 
@@ -63,7 +68,7 @@ public class Main {
 
     public static double[] mortgageCalculator(double principal, double annualInterestRate, double loanLengthYears){
 
-        double monthlyInterestRate = annualInterestRate / 12;
+        double monthlyInterestRate = annualInterestRate / 12 / 100;
 
         double numberOfMonthlyPayments = (int) (loanLengthYears * 12);
 
@@ -80,12 +85,17 @@ public class Main {
 
     public static double futureValueCalculator(double deposit, double interestRateTwo, double maturityLength){
         double dailyInterestRate = interestRateTwo / 100 / 365;
-        return deposit * Math.pow(1+ dailyInterestRate, maturityLength * 365);
+        return deposit * Math.pow(1 + dailyInterestRate, maturityLength * 365);
 
     }
 
-    public static double presentValue(double monthlyPayout, double expectedInterestRate, double presentValueYears){
+    public static double calculatePresentValue(double monthlyPayout, double expectedInterestRate, double presentValueYears){
+        double monthlyInterestRate = expectedInterestRate / 12;
 
-        return 0;
+        int months = (int) presentValueYears * 12;
+
+        double presentValue = monthlyPayout * (1 - Math.pow(1 + monthlyInterestRate, -months)) / monthlyInterestRate;
+
+        return presentValue;
     }
 }
